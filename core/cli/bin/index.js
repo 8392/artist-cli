@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+const importLocal = require('import-local')
 const utils = require('artist-cli-utils')
-module.exports = core;
 
-function core () {
-  // TODO
+if (importLocal(__filename)) {
+  require('npmlog').info('cli', '正在使用 artist-cli 本地版本')
+} else {
+  require('../lib')(process.argv.slice(2))
 }
-
-console.log("core", utils)
