@@ -1,0 +1,29 @@
+{
+  "name": "artist-cli-utils",
+  "version": "0.0.1",
+  "description": "artist-cli的工具函数",
+  "author": "artist <306048913@qq.com>",
+  "homepage": "https://github.com/8392/artist-cli#readme",
+  "license": "ISC",
+  "main": "bin/index.js",
+  "directories": {
+    "bin": "bin",
+    "test": "__tests__"
+  },
+  "files": [
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/8392/artist-cli.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/8392/artist-cli/issues"
+  },
+  "dependencies": {
+
+  }
+}
