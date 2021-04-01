@@ -5,6 +5,7 @@ const colors = require('colors')
 const userHome = require('user-home')
 const dotenv = require('dotenv')
 const pathExist = require('path-exists')
+const pkgDir = require('pkg-dir');
 const pkg = require('../package.json')
 const content = require('./const')
 module.exports = core
@@ -16,6 +17,8 @@ function core () {
     checkRoot()
     checkNodeVersion()
     getUserHome()
+    registerCommander()
+    getUserName()
     chenckInputArgs()
     checkEnv()
     checkGlobalUpdate()
@@ -23,6 +26,33 @@ function core () {
   } catch (e) {
     log.error(e.message)
   }
+}
+
+async function getUserName () {
+  const res = await pkgDir(__dirname)
+  console.log('用户目录', res)
+}
+
+
+function registerCommander () {
+  const { program } = require('commander')
+
+
+
+
+  program
+    .command('init [projectName]')
+    .action((projectName) => {
+      console.log("init", projectName)
+    })
+
+
+  /*
+    写在最下面，初始化commander
+  */
+  program
+    .version(pkg.version)
+    .parse()
 }
 
 async function checkGlobalUpdate () {
@@ -44,13 +74,18 @@ async function checkGlobalUpdate () {
 
 function checkEnv () {
   const dotenvPath = path.resolve(userHome, '.env')
+  dotenv.config({
+    path: dotenvPath
+  })
+
   if (pathExist(dotenvPath)) {
     dotenv.config({
       path: dotenvPath
     })
   }
+
   createDefaultConfig()
-  log.verbose('环境变量', process.env.CLI_HOME_PATH)
+  log.verbose('环境变量', process.env)
 }
 
 function createDefaultConfig () {
@@ -96,10 +131,10 @@ function chenckInputArgs () {
   const minimist = require('minimist')
   args = minimist(process.argv.slice(2))
   // console.log("args", args)
-  checkArgs()
+  checkArgs(args)
 }
 
-function checkArgs () {
+function checkArgs (args) {
   if (args.debug) {
     process.env.LOG_LEVEL = 'verbose'
   } else {
