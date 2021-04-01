@@ -1,20 +1,17 @@
 {
-  "name": "artist-cli-core",
+  "name": "artist-cli-npminfor",
   "version": "0.0.1",
   "description": "> TODO: description",
   "author": "artist <306048913@qq.com>",
   "homepage": "https://github.com/8392/artist-cli#readme",
   "license": "ISC",
-  "main": "bin/index.js",
+  "main": "lib/index.js",
   "directories": {
-    "bin": "bin",
+    "lib": "lib",
     "test": "__tests__"
   },
-  "bin": {
-    "artist-cli-core": "bin/index.js"
-  },
   "files": [
-    "bin"
+    "lib"
   ],
   "repository": {
     "type": "git",
@@ -27,17 +24,8 @@
     "url": "https://github.com/8392/artist-cli/issues"
   },
   "dependencies": {
-    "artist-cli-log": "file:../../utils/log",
-    "artist-cli-utils": "file:../../utils/city",
-    "artist-cli-npminfor": "file:../../utils/npmInfor",
-    "colors": "^1.4.0",
-    "dotenv": "^8.2.0",
-    "import-local": "^3.0.2",
-    "minimist": "^1.2.5",
-    "npmlog": "^4.1.2",
-    "path-exists": "^4.0.0",
-    "root-check": "^1.0.0",
+    "axios": "^0.21.1",
     "semver": "^7.3.5",
-    "user-home": "^2.0.0"
+    "url-join": "^4.0.1"
   }
 }

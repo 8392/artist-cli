@@ -1,5 +1,5 @@
 const path = require('path')
-const sermer = require('semver')
+const semver = require('semver')
 const log = require('artist-cli-log')
 const colors = require('colors')
 const userHome = require('user-home')
@@ -18,10 +18,28 @@ function core () {
     getUserHome()
     chenckInputArgs()
     checkEnv()
+    checkGlobalUpdate()
     // log.verbose('debug', 'test debug')
   } catch (e) {
     log.error(e.message)
   }
+}
+
+async function checkGlobalUpdate () {
+  // 1.获取当前版本号，和模块名
+  const currentVersion = pkg.version
+  const npmName = pkg.name
+  // 2.调用npm API,获取所有的版本号
+  // 3.提取所有版本号，比对那些版本号大于当前版本号
+  // 4.对比
+  const { getNpmServerVersion } = require('artist-cli-npminfor')
+  const lastVersion = await getNpmServerVersion(currentVersion, npmName)
+  // console.log(lastVersion)
+  if (lastVersion && semver.gt(lastVersion, currentVersion)) {
+    log.warn(colors.yellow(`请手动更新 ${npmName}，当前版本：${currentVersion}，最新版本：${lastVersion}
+                  更新命令：npm install -g ${npmName}`))
+  }
+
 }
 
 function checkEnv () {
@@ -32,7 +50,7 @@ function checkEnv () {
     })
   }
   createDefaultConfig()
-  log.verbose('环境变量', process.env)
+  log.verbose('环境变量', process.env.CLI_HOME_PATH)
 }
 
 function createDefaultConfig () {
@@ -57,7 +75,7 @@ function checkPkgVersion () {
 function checkNodeVersion (params) {
   const currentVersion = process.version
   const lowestVersion = content.LOWEST_NODE_VERSION
-  if (!sermer.gt(currentVersion, lowestVersion)) {
+  if (!semver.gt(currentVersion, lowestVersion)) {
     throw new Error(colors.red(`artist-cli 需要安装v${lowestVersion}以上版本的 Node.js`))
   }
 }
@@ -77,7 +95,7 @@ async function getUserHome () {
 function chenckInputArgs () {
   const minimist = require('minimist')
   args = minimist(process.argv.slice(2))
-  console.log("args", args)
+  // console.log("args", args)
   checkArgs()
 }
 
