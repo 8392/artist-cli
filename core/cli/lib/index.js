@@ -95,11 +95,11 @@ async function getUserHome () {
 function chenckInputArgs () {
   const minimist = require('minimist')
   args = minimist(process.argv.slice(2))
-  // console.log("args", args)
-  checkArgs()
+  console.log("args", args)
+  checkArgs(args)
 }
 
-function checkArgs () {
+function checkArgs (args) {
   if (args.debug) {
     process.env.LOG_LEVEL = 'verbose'
   } else {
