@@ -48,5 +48,6 @@ async function getNpmServerVersion (baseVersion, npmName, registry) {
 module.exports = {
   getNpmInfor,
   getNpmVersions,
+  getDefaultRegistry,
   getNpmServerVersion
 }

@@ -6,6 +6,8 @@ const userHome = require('user-home')
 const dotenv = require('dotenv')
 const pathExist = require('path-exists')
 const pkgDir = require('pkg-dir');
+const init = require('artist-cli-init')
+const exec = require('artist-cli-exec')
 const pkg = require('../package.json')
 const content = require('./const')
 module.exports = core
@@ -17,12 +19,12 @@ function core () {
     checkRoot()
     checkNodeVersion()
     getUserHome()
-    registerCommander()
     getUserName()
-    chenckInputArgs()
+    // chenckInputArgs()
     checkEnv()
     checkGlobalUpdate()
-    // log.verbose('debug', 'test debug')
+    registerCommander()
+    log.verbose('debug', 'test debug')
   } catch (e) {
     log.error(e.message)
   }
@@ -30,29 +32,66 @@ function core () {
 
 async function getUserName () {
   const res = await pkgDir(__dirname)
-  console.log('用户目录', res)
+  // console.log('用户目录', res)
 }
 
 
 function registerCommander () {
-  const { program } = require('commander')
+  const { Command } = require('commander')
+  const program = new Command()
 
-
+  program
+    .name(Object.keys(pkg.bin)[0])
+    .usage('command [options]')
+    .version(pkg.version)
+    .option('-d, --debug', '是否开启调试模式', false)
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件', '')
 
 
   program
     .command('init [projectName]')
-    .action((projectName) => {
-      console.log("init", projectName)
-    })
+    .option('-f --force', '是否强制初始化')
+    .action(exec)
+
+  // 指定targetPath
+  program.on('option:targetPath', () => {
+    process.env.CLI_TARGET_PATH = program.opts().targetPath
+  })
+
+  program.on('option:debug', () => {
+    if (program.opts().debug) {
+      process.env.LOG_LEVEL = 'verbose'
+    } else {
+      process.env.LOG_LEVEL = 'info'
+    }
+    console.log("process.env.LOG_LEVEL", process.env.LOG_LEVEL)
+    log.level = process.env.LOG_LEVEL
+    // log.verbose()
+    log.verbose('环境变量AAA', process.env.LOG_LEVEL)
+  })
+
+
+  program.on('command:*', (obj) => {
+    const availableCommands = program.commands.map(cmd => cmd._name)
+    console.log(colors.red('未知的命令：' + obj[0]))
+    if (availableCommands.length > 0) {
+      console.log(colors.green('可用命令：' + availableCommands.join('，')))
+    }
+  })
+
+
+  program.parse(process.argv)
+
+  if (program.args && program.args.length < 1) {
+    program.outputHelp()
+    console.log()
+  }
 
 
   /*
     写在最下面，初始化commander
   */
-  program
-    .version(pkg.version)
-    .parse()
+
 }
 
 async function checkGlobalUpdate () {
@@ -103,8 +142,8 @@ function createDefaultConfig () {
 
 
 function checkPkgVersion () {
-  console.log(pkg.version)
-  log.success('成功日志信息')
+  // console.log(pkg.version)
+  // log.success('成功日志信息')
 }
 
 function checkNodeVersion (params) {
@@ -118,7 +157,7 @@ function checkNodeVersion (params) {
 function checkRoot () {
   const rootCheck = require('root-check')
   rootCheck()
-  console.log("root", process.geteuid)
+  // console.log("root", process.geteuid)
 }
 
 async function getUserHome () {

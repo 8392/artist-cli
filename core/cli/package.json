@@ -29,7 +29,9 @@
   "dependencies": {
     "artist-cli-log": "file:../../utils/log",
     "artist-cli-npminfor": "file:../../utils/npmInfor",
-    "artist-cli-utils": "file:../../utils/city",
+    "artist-cli-utils": "file:../../utils/utils",
+    "artist-cli-init": "file:../../commands/init",
+    "artist-cli-exec": "file:../exec",
     "colors": "^1.4.0",
     "commander": "^7.2.0",
     "dotenv": "^8.2.0",
